@@ -9,6 +9,10 @@ const registerBtn = document.getElementById("register");
 const allCardsTempBtn = document.getElementById("all-cards-temp");
 const registerTempBtn = document.getElementById("register-temp");
 
+allCardsBtn.addEventListener("click", () => {
+    userFunc("a","a");
+})
+
 usersBtn.addEventListener("click", () => {
     users();
 });
@@ -20,6 +24,13 @@ registerBtn.addEventListener("click", () => {
 registerTempBtn.addEventListener("click", () => {
     register();
 });
+
+function userFunc(id, name) {
+    main.innerHTML = 
+        `<div class="mx-auto" style="width: 25rem;">
+            ${name}
+        </div>`
+}
 
 async function users() {
     main.innerHTML = ""
@@ -34,8 +45,8 @@ async function users() {
         main.innerHTML += 
             `<div class="card mx-auto my-5" style="width: 25rem;">
                 <div class="card-body">
-                    <h2 class="card-title">${curUser["username"]}</h5>
-                    <a id="all-cards-temp" href="#" class="card-link">visit</a>
+                    <h2 class="card-title">${curUser["username"]}</h2>
+                    <a href="javascript:userFunc('${curUser["_id"]}', '${curUser["username"]}',)" class="card-link">visit</a>
                 </div>
             </div>`
     }
