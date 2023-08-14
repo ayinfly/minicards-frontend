@@ -12,26 +12,39 @@
     <link rel="stylesheet" type="text/css" href="styles.css" />
 </head>
 <body>
+    <!-- navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light px-5">
         <a class="navbar-brand" href="#">minicards</a>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="#">folders</a>
+                    <a id="all-cards" class="nav-link" href="#">all cards</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">users</a>
+                    <a id="users" class="nav-link" href="#">users</a>
                 </li>
             </ul>
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" href="#">login</a>
+                    <a id="login" class="nav-link" href="#">login</a>
+                </li>
+                <li class="nav-item">
+                    <a id="register" class="nav-link" href="#">register</a>
                 </li>
             </ul>
         </div>
     </nav>
-    <div id="main" class="wrapper">
-        
+    <div id="main">
+        <!-- intro message -->
+        <div class="card mx-auto mt-5" style="width: 18rem;">
+            <div class="card-body">
+                <h2 class="card-title">welcome</h5>
+                <p class="card-text">you must sign up to make more cards as only registered users may create flash cards, but feel free to browse all available flashcards</p>
+                <a id="all-cards-temp" href="#" class="card-link">all cards</a>
+                <a id="register-temp" href="#" class="card-link">register</a>
+            </div>
+        </div>
     </div>
+    <script type="text/javascript" src="app.js"></script>
 </body>
 </html>
