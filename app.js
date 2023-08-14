@@ -9,21 +9,40 @@ const registerBtn = document.getElementById("register");
 const allCardsTempBtn = document.getElementById("all-cards-temp");
 const registerTempBtn = document.getElementById("register-temp");
 
-allCardsBtn.addEventListener("click", () => {
-    userFunc("a","a");
-})
+// allCardsBtn.addEventListener("click", userFunc("a","a"));
+usersBtn.addEventListener("click", users);
+loginBtn.addEventListener("click", login);
+registerBtn.addEventListener("click", register);
+registerTempBtn.addEventListener("click", register);
 
-usersBtn.addEventListener("click", () => {
-    users();
-});
+function checkToken(){
+    let token = localStorage.getItem("token");
+    if(token){
+      return token
+    }
+    return;
+}
 
-registerBtn.addEventListener("click", () => {
-    register();
-});
+function hasToken() {
+   loginBtn.innerHTML = "my cards";
+    loginBtn.removeEventListener("click", login);
 
-registerTempBtn.addEventListener("click", () => {
-    register();
-});
+    registerBtn.innerHTML = "logout";
+    registerBtn.removeEventListener("click", register);
+    registerBtn.addEventListener("click", () => {
+        localStorage.clear();
+        window.location.reload();
+    });
+}
+
+function init() {
+    let token = checkToken()
+    if (token){
+      hasToken();
+    }
+}
+  
+  init();
 
 function userFunc(id, name) {
     main.innerHTML = 
@@ -54,6 +73,41 @@ async function users() {
 
 function myCards() {
 
+}
+
+function login() {
+    // form code lmao
+    main.innerHTML =
+        '<form id="register-form" class="mx-auto mt-5 " style="width:25%;">' +
+            '<div class="form-group">' +
+                '<label for="exampleInputEmail1">username</label>' +
+                '<input type="username" name="username" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="username">' +
+            '</div>' +
+            '<div class="form-group">' +
+                '<label for="exampleInputPassword1">password</label>' +
+                '<input type="password" name="password" class="form-control" id="exampleInputPassword1" placeholder="password">' +
+            '</div>' +
+            '<button type="submit" class="btn btn-primary">Submit</button>' +
+            '<div id="error" class="mt-2"></div>' +
+        '</form>';
+
+    const registerForm = document.getElementById("register-form");
+    registerForm.addEventListener("submit", async function (e){
+        e.preventDefault();
+        const loginData = new FormData(registerForm).entries();
+        let res = await fetch("http://localhost:3000/api/users/login",{
+            method: "POST",
+            headers: {"Content-Type": "application/json" },
+            body: JSON.stringify(Object.fromEntries(loginData))
+        });
+
+        let data = await res.json();
+        if(res.status === 200){
+            saveTokenData(data);
+        } else{
+            error.innerHTML = data.error;
+        }
+    })
 }
 
 function register() {
@@ -98,4 +152,5 @@ function register() {
 function saveTokenData(data){
     localStorage.setItem("token", data.token)
     localStorage.setItem("username", data.user.username )
+    hasToken();
 }
