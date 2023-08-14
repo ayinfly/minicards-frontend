@@ -1,10 +1,17 @@
+// canvas
 const main = document.getElementById("main");
+
+// buttons
 const allCardsBtn = document.getElementById("all-cards");
 const usersBtn = document.getElementById("users");
 const loginBtn = document.getElementById("login");
 const registerBtn = document.getElementById("register");
 const allCardsTempBtn = document.getElementById("all-cards-temp");
 const registerTempBtn = document.getElementById("register-temp");
+
+usersBtn.addEventListener("click", () => {
+    users();
+});
 
 registerBtn.addEventListener("click", () => {
     register();
@@ -13,6 +20,30 @@ registerBtn.addEventListener("click", () => {
 registerTempBtn.addEventListener("click", () => {
     register();
 });
+
+async function users() {
+    main.innerHTML = ""
+    let res = await fetch("http://localhost:3000/api/users/",{
+        method: "GET",
+        headers: {"Content-Type": "application/json" },
+    });
+    let data = await res.json();
+
+    for (let i = 0; i < data.length; i++) {
+        let curUser = data[i];
+        main.innerHTML += 
+            `<div class="card mx-auto my-5" style="width: 25rem;">
+                <div class="card-body">
+                    <h2 class="card-title">${curUser["username"]}</h5>
+                    <a id="all-cards-temp" href="#" class="card-link">visit</a>
+                </div>
+            </div>`
+    }
+}
+
+function myCards() {
+
+}
 
 function register() {
     // form code lmao
@@ -31,14 +62,13 @@ function register() {
                 '<input type="password" name="confirmPassword" class="form-control" id="exampleInputPassword2">' +
             '</div>' +
             '<button type="submit" class="btn btn-primary">Submit</button>' +
-            '<span id="error"></span>' +
+            '<div id="error" class="mt-2"></div>' +
         '</form>';
 
     const registerForm = document.getElementById("register-form");
     registerForm.addEventListener("submit", async function (e){
         e.preventDefault();
         const loginData = new FormData(registerForm).entries();
-        alert(loginData.username);
         let res = await fetch("http://localhost:3000/api/users/signup",{
             method: "POST",
             headers: {"Content-Type": "application/json" },
@@ -49,8 +79,7 @@ function register() {
         if(res.status === 200){
             saveTokenData(data);
         } else{
-            print(data)
-            error.innerHTML = data.info.message
+            error.innerHTML = data.error;
         }
     })
 }
