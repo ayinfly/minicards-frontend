@@ -26,12 +26,37 @@ function checkToken(){
 function newFolderFunc() {
     const newFolderBox = document.getElementById("newFolderBox");
     newFolderBox.innerHTML = 
-    `<form>
-        <div class="form-grou m-2">
+    `<form id="newFolderForm">
+        <div class="form-group m-2">
             <input type="text" name="title" class="form-control" placeholder="title"
         </div>
         <button type="submit" class="btn btn-primary m-2">create</button>
-    </form>`;
+    </form>
+    <div id="setError">
+    </div>`;
+
+    const newFolderForm = document.getElementById("newFolderForm");
+    newFolderForm.addEventListener("submit", async function (e){
+        e.preventDefault();
+        const loginData = new FormData(newFolderForm).entries();
+        const bearer = `Bearer ${localStorage.getItem("token")}`
+        let res = await fetch("http://localhost:3000/api/folders/create",{
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": bearer,
+                "token": localStorage.getItem("token")
+            },
+            body: JSON.stringify(Object.fromEntries(loginData))
+        });
+
+        let data = await res.json();
+        if(res.status === 200){
+            myCards()
+        } else{
+            document.getElementById("setError").innerHTML = data.error;
+        }
+    })
 }
 
 async function myCards() {
