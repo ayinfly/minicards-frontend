@@ -23,9 +23,34 @@ function checkToken(){
     return;
 }
 
+async function myCards() {
+    main.innerHTML = 
+        `<div class="mx-auto mt-4" style="width: 25rem;">
+            <h3>${localStorage.getItem("username")}'s cards</h3>
+        </div>`;
+
+    let res = await fetch(`http://localhost:3000/api/users/${localStorage.getItem("id")}`,{
+        method: "GET",
+        headers: {"Content-Type": "application/json" },
+    });
+    let data = await res.json();
+
+    for (let i = 0; i < data.length; i++) {
+        let curFolder = data[i];
+        main.innerHTML += 
+            `<div class="card mx-auto my-2" style="width: 25rem;">
+                <div class="card-body">
+                    <h2 class="card-title">${curFolder["title"]}</h2>
+                    <a href="#" class="card-link">visit</a>
+                </div>
+            </div>`
+    }
+}
+
 function hasToken() {
-   loginBtn.innerHTML = "my cards";
+    loginBtn.innerHTML = "my cards";
     loginBtn.removeEventListener("click", login);
+    loginBtn.addEventListener("click", myCards);
 
     registerBtn.innerHTML = "logout";
     registerBtn.removeEventListener("click", register);
@@ -42,7 +67,7 @@ function init() {
     }
 }
   
-  init();
+init();
 
 function userFunc(id, name) {
     main.innerHTML = 
@@ -69,10 +94,6 @@ async function users() {
                 </div>
             </div>`
     }
-}
-
-function myCards() {
-
 }
 
 function login() {
@@ -152,5 +173,6 @@ function register() {
 function saveTokenData(data){
     localStorage.setItem("token", data.token)
     localStorage.setItem("username", data.user.username )
+    localStorage.setItem("id", data.user._id)
     hasToken();
 }
