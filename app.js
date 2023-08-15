@@ -77,7 +77,10 @@ async function myCards() {
             `<div class="card mx-auto my-2" style="width: 25rem;">
                 <div class="card-body">
                     <h2 class="card-title">${curFolder["title"]}</h2>
-                    <a href="#" class="card-link">visit</a>
+                    <p class="card-subtitle mb-2 text-muted">${curFolder["timestamp"].substr(0, 10)}</p>
+                    <a href="#" class="card-link">study</a>
+                    <a href="#" class="card-link">edit</a>
+                    <a href="javascript:deleteSet('${curFolder["_id"]}')" class="card-link">delete</a>
                 </div>
             </div>`
     }
@@ -89,6 +92,22 @@ async function myCards() {
         </div>`
     const newFolder = document.getElementById("newFolder");
     newFolder.addEventListener("click", newFolderFunc);   
+}
+
+async function deleteSet(id) {
+    const bearer = `Bearer ${localStorage.getItem("token")}`;
+    let res = await fetch(`http://localhost:3000/api/folders/${id}/delete`,{
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": bearer,
+        }
+    })
+    const data = await res.json();
+    if (res.status === 200){
+      myCards();
+      return;
+    }
 }
 
 function hasToken() {
@@ -131,7 +150,7 @@ async function userFunc(id, name) {
             `<div class="card mx-auto my-2" style="width: 25rem;">
                 <div class="card-body">
                     <h2 class="card-title">${curFolder["title"]}</h2>
-                    <a href="#" class="card-link">visit</a>
+                    <a href="#" class="card-link">study</a>
                 </div>
             </div>`
     }
