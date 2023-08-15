@@ -62,7 +62,7 @@ async function users() {
     for (let i = 0; i < data.length; i++) {
         let curUser = data[i];
         main.innerHTML += 
-            `<div class="card mx-auto my-5" style="width: 25rem;">
+            `<div class="card mx-auto my-2" style="width: 25rem;">
                 <div class="card-body">
                     <h2 class="card-title">${curUser["username"]}</h2>
                     <a href="javascript:userFunc('${curUser["_id"]}', '${curUser["username"]}',)" class="card-link">visit</a>
