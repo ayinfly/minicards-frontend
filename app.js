@@ -23,6 +23,17 @@ function checkToken(){
     return;
 }
 
+function newFolderFunc() {
+    const newFolderBox = document.getElementById("newFolderBox");
+    newFolderBox.innerHTML = 
+    `<form>
+        <div class="form-grou m-2">
+            <input type="text" name="title" class="form-control" placeholder="title"
+        </div>
+        <button type="submit" class="btn btn-primary m-2">create</button>
+    </form>`;
+}
+
 async function myCards() {
     main.innerHTML = 
         `<div class="mx-auto mt-4" style="width: 25rem;">
@@ -45,6 +56,14 @@ async function myCards() {
                 </div>
             </div>`
     }
+    main.innerHTML += 
+        `<div id="newFolderBox" class="card mx-auto my-2" style="width: 25rem;">
+            <div class="card-body">
+                <a id="newFolder" href="#" class="card-link">create new set</a>
+            </div>
+        </div>`
+    const newFolder = document.getElementById("newFolder");
+    newFolder.addEventListener("click", newFolderFunc);   
 }
 
 function hasToken() {
@@ -175,4 +194,5 @@ function saveTokenData(data){
     localStorage.setItem("username", data.user.username )
     localStorage.setItem("id", data.user._id)
     hasToken();
+    myCards();
 }
