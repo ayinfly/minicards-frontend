@@ -15,6 +15,7 @@ loginBtn.addEventListener("click", login);
 registerBtn.addEventListener("click", register);
 registerTempBtn.addEventListener("click", register);
 
+// checks if token exists
 function checkToken(){
     let token = localStorage.getItem("token");
     if(token){
@@ -23,6 +24,7 @@ function checkToken(){
     return;
 }
 
+// creates input form to create a new folder
 function newFolderFunc() {
     const newFolderBox = document.getElementById("newFolderBox");
     newFolderBox.innerHTML = 
@@ -59,6 +61,7 @@ function newFolderFunc() {
     })
 }
 
+// gets cards from logged in user
 async function myCards() {
     main.innerHTML = 
         `<div class="mx-auto mt-4" style="width: 25rem;">
@@ -94,6 +97,7 @@ async function myCards() {
     newFolder.addEventListener("click", newFolderFunc);   
 }
 
+// deletes folder with specific id
 async function deleteSet(id) {
     const bearer = `Bearer ${localStorage.getItem("token")}`;
     let res = await fetch(`http://localhost:3000/api/folders/${id}/delete`,{
@@ -110,6 +114,7 @@ async function deleteSet(id) {
     }
 }
 
+// changes login and register btns
 function hasToken() {
     loginBtn.innerHTML = "my cards";
     loginBtn.removeEventListener("click", login);
@@ -123,15 +128,16 @@ function hasToken() {
     });
 }
 
+// checks if token exists on reloads
 function init() {
     let token = checkToken()
     if (token){
       hasToken();
     }
 }
-  
 init();
 
+// gets cards from a specific user
 async function userFunc(id, name) {
     main.innerHTML = 
         `<div class="mx-auto mt-4" style="width: 25rem;">
@@ -156,6 +162,7 @@ async function userFunc(id, name) {
     }
 }
 
+// gets all users
 async function users() {
     main.innerHTML = ""
     let res = await fetch("http://localhost:3000/api/users/",{
@@ -176,6 +183,8 @@ async function users() {
     }
 }
 
+
+// login form
 function login() {
     // form code lmao
     main.innerHTML =
@@ -211,6 +220,8 @@ function login() {
     })
 }
 
+
+// register form
 function register() {
     // form code lmao
     main.innerHTML =
@@ -250,6 +261,7 @@ function register() {
     })
 }
 
+// saves token to localstorage
 function saveTokenData(data){
     localStorage.setItem("token", data.token)
     localStorage.setItem("username", data.user.username )
