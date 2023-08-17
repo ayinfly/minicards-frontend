@@ -9,10 +9,11 @@ const registerBtn = document.getElementById("register");
 const allCardsTempBtn = document.getElementById("all-cards-temp");
 const registerTempBtn = document.getElementById("register-temp");
 
-// allCardsBtn.addEventListener("click", userFunc("a","a"));
+allCardsBtn.addEventListener("click", folders);
 usersBtn.addEventListener("click", users);
 loginBtn.addEventListener("click", login);
 registerBtn.addEventListener("click", register);
+allCardsTempBtn.addEventListener("click", folders);
 registerTempBtn.addEventListener("click", register);
 
 // checks if token exists
@@ -61,6 +62,43 @@ function newFolderFunc() {
     })
 }
 
+// edits folder name
+async function editFolder(id) {
+    const editBox = document.getElementById(id);
+    editBox.innerHTML =
+    `<form id="editFolderForm">
+        <div class="form-group my-2">
+            <input type="text" name="title" class="form-control" placeholder="new title"
+        </div>
+        <button type="submit" class="btn btn-primary m-2">edit</button>
+    </form>
+    <div id="editSetError">
+    </div>`;
+
+    const editFolderForm = document.getElementById("editFolderForm");
+    editFolderForm.addEventListener("submit", async function (e){
+        e.preventDefault();
+        const folderData = new FormData(editFolderForm).entries();
+        const bearer = `Bearer ${localStorage.getItem("token")}`
+        let res = await fetch(`http://localhost:3000/api/folders/${id}/edit`,{
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": bearer,
+            },
+            body: JSON.stringify(Object.fromEntries(folderData))
+        });
+
+        let data = await res.json();
+        if(res.status === 200){
+            myCards()
+        } else{
+            document.getElementById("editSetError").innerHTML = data.error;
+        }
+    })
+        
+}
+
 // gets cards from logged in user
 async function myCards() {
     main.innerHTML = 
@@ -83,7 +121,9 @@ async function myCards() {
                     <p class="card-subtitle mb-2 text-muted">${curFolder["timestamp"].substr(0, 10)}</p>
                     <a href="#" class="card-link">study</a>
                     <a href="#" class="card-link">edit</a>
+                    <a href="javascript:editFolder('${curFolder["_id"]}')" class="card-link">rename</a>
                     <a href="javascript:deleteSet('${curFolder["_id"]}')" class="card-link">delete</a>
+                    <div id="${curFolder["_id"]}"></div>
                 </div>
             </div>`
     }
@@ -156,6 +196,7 @@ async function userFunc(id, name) {
             `<div class="card mx-auto my-2" style="width: 25rem;">
                 <div class="card-body">
                     <h2 class="card-title">${curFolder["title"]}</h2>
+                    <p class="card-subtitle mb-2 text-muted">${curFolder["timestamp"].substr(0, 10)}</p>
                     <a href="#" class="card-link">study</a>
                 </div>
             </div>`
@@ -181,6 +222,29 @@ async function users() {
                 </div>
             </div>`
     }
+}
+
+// gets all folders
+async function folders() {
+    main.innerHTML = ""
+    let res = await fetch("http://localhost:3000/api/folders/",{
+        method: "GET",
+        headers: {"Content-Type": "application/json" },
+    });
+    let data = await res.json();
+
+    for (let i = 0; i < data.length; i++) {
+        let curFolder = data[i];
+        main.innerHTML += 
+            `<div class="card mx-auto my-2" style="width: 25rem;">
+                <div class="card-body">
+                    <h2 class="card-title">${curFolder["title"]}</h2>
+                    <p class="card-subtitle mb-2 text-muted">${curFolder["timestamp"].substr(0, 10)}</p>
+                    <a href="#" class="card-link">study</a>
+                </div>
+            </div>`
+    }
+
 }
 
 
