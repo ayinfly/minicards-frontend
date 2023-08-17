@@ -99,6 +99,80 @@ async function editFolder(id) {
         
 }
 
+function newCardFunc(id, name) {
+    const newCardBox = document.getElementById("newCardBox");
+    newCardBox.innerHTML = 
+    `<form id="newCardForm">
+        <div class="form-group m-2">
+            <input type="text" name="front" class="form-control" placeholder="front">
+        </div>
+        <div class="form-group m-2">
+            <input type="text" name="back" class="form-control" placeholder="back">
+        </div>
+        <button type="submit" class="btn btn-primary m-2">create</button>
+    </form>
+    <div id="setError">
+    </div>`;
+
+    const newCardForm = document.getElementById("newCardForm");
+    newCardForm.addEventListener("submit", async function (e){
+        e.preventDefault();
+        const cardData = new FormData(newCardForm).entries();
+        const bearer = `Bearer ${localStorage.getItem("token")}`
+        let res = await fetch(`http://localhost:3000/api/folders/${id}/cards/`,{
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": bearer,
+                "token": localStorage.getItem("token")
+            },
+            body: JSON.stringify(Object.fromEntries(cardData))
+        });
+
+        let data = await res.json();
+        if(res.status === 200){
+            editCards(id, name);
+        } else{
+            document.getElementById("setError").innerHTML = data.error;
+        }
+    })
+}
+
+// gets cards for card editing
+async function editCards(id, name) {
+    main.innerHTML = 
+        `<div class="mx-auto mt-4" style="width: 25rem;">
+            <h3>${name}</h3>
+            <a href="#">study</a>
+        </div>`;
+
+    let res = await fetch(`http://localhost:3000/api/folders/${id}/cards/`,{
+        method: "GET",
+        headers: {"Content-Type": "application/json" },
+    });
+    let data = await res.json();
+
+    for (let i = 0; i < data.length; i++) {
+        let curCard = data[i];
+        main.innerHTML += 
+            `<div class="card mx-auto my-2" style="width: 25rem;">
+                <div class="card-body">
+                    <h5 class="card-title">${curCard["front"]}</h2>
+                    <p class="card-text mb-2">${curCard["back"]}</p>
+                    <p class="card-subtitle mb-2 text-muted">${curCard["timestamp"].substr(0, 10)}</p>
+                    <a href="#" class="card-link">edit</a>
+                    <a href="#" class="card-link">delete</a>
+                </div>
+            </div>`
+    }
+    main.innerHTML += 
+        `<div id="newCardBox" class="card mx-auto my-2" style="width: 25rem;">
+            <div class="card-body">
+                <a id="newCard" href="javascript:newCardFunc('${id}', '${name}')" class="card-link">create new card</a>
+            </div>
+        </div>`
+}
+
 // gets cards from logged in user
 async function myCards() {
     main.innerHTML = 
@@ -120,7 +194,7 @@ async function myCards() {
                     <h2 class="card-title">${curFolder["title"]}</h2>
                     <p class="card-subtitle mb-2 text-muted">${curFolder["timestamp"].substr(0, 10)}</p>
                     <a href="#" class="card-link">study</a>
-                    <a href="#" class="card-link">edit</a>
+                    <a href="javascript:editCards('${curFolder["_id"]}', '${curFolder["title"]}')" class="card-link">edit</a>
                     <a href="javascript:editFolder('${curFolder["_id"]}')" class="card-link">rename</a>
                     <a href="javascript:deleteSet('${curFolder["_id"]}')" class="card-link">delete</a>
                     <div id="${curFolder["_id"]}"></div>
