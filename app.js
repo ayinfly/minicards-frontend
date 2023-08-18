@@ -99,6 +99,22 @@ async function editFolder(id) {
         
 }
 
+async function deleteCard(card_id, folder_id, name) {
+    const bearer = `Bearer ${localStorage.getItem("token")}`;
+    let res = await fetch(`http://localhost:3000/api/folders/${folder_id}/cards/${card_id}/delete`,{
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": bearer,
+        }
+    })
+    const data = await res.json();
+    if (res.status === 200){
+        editCards(folder_id, name);
+        return;
+    }
+}
+
 function newCardFunc(id, name) {
     const newCardBox = document.getElementById("newCardBox");
     newCardBox.innerHTML = 
@@ -161,7 +177,8 @@ async function editCards(id, name) {
                     <p class="card-text mb-2">${curCard["back"]}</p>
                     <p class="card-subtitle mb-2 text-muted">${curCard["timestamp"].substr(0, 10)}</p>
                     <a href="#" class="card-link">edit</a>
-                    <a href="#" class="card-link">delete</a>
+                    <a href="javascript:deleteCard('${curCard["_id"]}','${id}','${name}')" class="card-link">delete</a>
+                    <div id="${curCard["_id"]}"></div>
                 </div>
             </div>`
     }
