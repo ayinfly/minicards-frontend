@@ -136,7 +136,8 @@ async function study(folder_id, name) {
                 <div class="card mx-auto my-5" style="width: 25rem;">
                     <div class="card-body">
                         <h5 class="card-title">${curCard["front"]}</h5>
-                        <p class="card-subtitle">${curCard["back"]}</p>
+                        <p class="card-subtitle study-text">answer on hover</p>
+                        <p class="card-subtitle study-hover-text">${curCard["back"]}</p>
                     </div>
                 </div>
             </div>`;
