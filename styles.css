@@ -12,3 +12,13 @@ body {
     top: 50%;
     transform: translateY(-50%);
 }
+
+.study-hover-text{
+    display:none;
+}
+.card:hover .study-text{
+    display:none;
+}
+.card:hover .study-hover-text{
+    display:block;
+}
