@@ -245,7 +245,7 @@ async function editCards(id, name) {
     main.innerHTML = 
         `<div class="mx-auto mt-4" style="width: 25rem;">
             <h3>${name}</h3>
-            <a href="#">study</a>
+            <a href="javascript:study('${id}', '${name}')">study</a>
         </div>`;
 
     let res = await fetch(`http://localhost:3000/api/folders/${id}/cards/`,{
