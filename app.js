@@ -99,6 +99,36 @@ async function editFolder(id) {
         
 }
 
+async function study(folder_id, name) {
+    main.innerHTML = 
+    `<div id="carouselExampleControls" class="carousel slide" data-ride="carousel" data-interval="false">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <div class="card mx-auto my-2" style="width: 25rem;">
+                    <div class="card-body">
+                        <a id="newFolder" href="#" class="card-link">create new set</a>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img src="..." class="d-block w-100" alt="...">
+            </div>
+            <div class="carousel-item">
+                <img src="..." class="d-block w-100" alt="...">
+            </div>
+        </div>
+        <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+        </a>
+    </div>`
+}
+
+// deletes a specific card
 async function deleteCard(card_id, folder_id, name) {
     const bearer = `Bearer ${localStorage.getItem("token")}`;
     let res = await fetch(`http://localhost:3000/api/folders/${folder_id}/cards/${card_id}/delete`,{
@@ -115,6 +145,7 @@ async function deleteCard(card_id, folder_id, name) {
     }
 }
 
+// creates a new card
 function newCardFunc(id, name) {
     const newCardBox = document.getElementById("newCardBox");
     newCardBox.innerHTML = 
@@ -154,6 +185,45 @@ function newCardFunc(id, name) {
     })
 }
 
+// edits a specific card
+async function editCard(card_id, folder_id, name) {
+    const editBox = document.getElementById(card_id);
+    editBox.innerHTML =
+    `<form id="editCardForm">
+        <div class="form-group my-2">
+            <input type="text" name="front" class="form-control" placeholder="new front"
+        </div>
+        <div class="form-group my-2">
+            <input type="text" name="back" class="form-control" placeholder="new back"
+        </div>
+        <button type="submit" class="btn btn-primary m-2">edit</button>
+    </form>
+    <div id="editSetError">
+    </div>`;
+
+    const editCardForm = document.getElementById("editCardForm");
+    editCardForm.addEventListener("submit", async function (e){
+        e.preventDefault();
+        const cardData = new FormData(editCardForm).entries();
+        const bearer = `Bearer ${localStorage.getItem("token")}`
+        let res = await fetch(`http://localhost:3000/api/folders/${folder_id}/cards/${card_id}/edit`,{
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": bearer,
+            },
+            body: JSON.stringify(Object.fromEntries(cardData))
+        });
+
+        let data = await res.json();
+        if(res.status === 200){
+            editCards(folder_id, name);
+        } else{
+            document.getElementById("editSetError").innerHTML = data.error;
+        }
+    })
+}
+
 // gets cards for card editing
 async function editCards(id, name) {
     main.innerHTML = 
@@ -176,7 +246,7 @@ async function editCards(id, name) {
                     <h5 class="card-title">${curCard["front"]}</h2>
                     <p class="card-text mb-2">${curCard["back"]}</p>
                     <p class="card-subtitle mb-2 text-muted">${curCard["timestamp"].substr(0, 10)}</p>
-                    <a href="#" class="card-link">edit</a>
+                    <a href="javascript:editCard('${curCard["_id"]}','${id}','${name}')" class="card-link">edit</a>
                     <a href="javascript:deleteCard('${curCard["_id"]}','${id}','${name}')" class="card-link">delete</a>
                     <div id="${curCard["_id"]}"></div>
                 </div>
@@ -210,7 +280,7 @@ async function myCards() {
                 <div class="card-body">
                     <h2 class="card-title">${curFolder["title"]}</h2>
                     <p class="card-subtitle mb-2 text-muted">${curFolder["timestamp"].substr(0, 10)}</p>
-                    <a href="#" class="card-link">study</a>
+                    <a href="javascript:study('${curFolder["_id"]}', '${curFolder["title"]}')" class="card-link">study</a>
                     <a href="javascript:editCards('${curFolder["_id"]}', '${curFolder["title"]}')" class="card-link">edit</a>
                     <a href="javascript:editFolder('${curFolder["_id"]}')" class="card-link">rename</a>
                     <a href="javascript:deleteSet('${curFolder["_id"]}')" class="card-link">delete</a>
