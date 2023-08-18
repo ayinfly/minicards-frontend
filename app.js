@@ -100,21 +100,22 @@ async function editFolder(id) {
 }
 
 async function study(folder_id, name) {
+    let res = await fetch(`http://localhost:3000/api/folders/${folder_id}/cards/`,{
+        method: "GET",
+        headers: {"Content-Type": "application/json" },
+    });
+    let data = await res.json();
+
     main.innerHTML = 
     `<div id="carouselExampleControls" class="carousel slide" data-ride="carousel" data-interval="false">
-        <div class="carousel-inner">
+        <div id="carousel-inner" class="carousel-inner">
             <div class="carousel-item active">
-                <div class="card mx-auto my-2" style="width: 25rem;">
+                <div class="card mx-auto my-5" style="width: 25rem;">
                     <div class="card-body">
-                        <a id="newFolder" href="#" class="card-link">create new set</a>
+                        <h5 class="card-title">${name}</h5>
+                        <p class="card-subtitle">use the left and right arrows to scroll through the cards</p>
                     </div>
                 </div>
-            </div>
-            <div class="carousel-item">
-                <img src="..." class="d-block w-100" alt="...">
-            </div>
-            <div class="carousel-item">
-                <img src="..." class="d-block w-100" alt="...">
             </div>
         </div>
         <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
@@ -126,6 +127,20 @@ async function study(folder_id, name) {
             <span class="sr-only">Next</span>
         </a>
     </div>`
+
+    for (let i = 0; i < data.length; i++) {
+        let curCard = data[i];
+        innerCarousel = document.getElementById("carousel-inner");
+        innerCarousel.innerHTML +=
+            `<div class="carousel-item">
+                <div class="card mx-auto my-5" style="width: 25rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">${curCard["front"]}</h5>
+                        <p class="card-subtitle">${curCard["back"]}</p>
+                    </div>
+                </div>
+            </div>`;
+    }        
 }
 
 // deletes a specific card
@@ -407,7 +422,6 @@ async function folders() {
     }
 
 }
-
 
 // login form
 function login() {
