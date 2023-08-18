@@ -374,7 +374,7 @@ async function userFunc(id, name) {
                 <div class="card-body">
                     <h2 class="card-title">${curFolder["title"]}</h2>
                     <p class="card-subtitle mb-2 text-muted">${curFolder["timestamp"].substr(0, 10)}</p>
-                    <a href="#" class="card-link">study</a>
+                    <a href="javascript:study('${curFolder["_id"]}','${curFolder["title"]}')" class="card-link">study</a>
                 </div>
             </div>`
     }
@@ -417,7 +417,7 @@ async function folders() {
                 <div class="card-body">
                     <h2 class="card-title">${curFolder["title"]}</h2>
                     <p class="card-subtitle mb-2 text-muted">${curFolder["timestamp"].substr(0, 10)}</p>
-                    <a href="#" class="card-link">study</a>
+                    <a href="javascript:study('${curFolder["_id"]}','${curFolder["title"]}')" class="card-link">study</a>
                 </div>
             </div>`
     }
