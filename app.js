@@ -43,7 +43,7 @@ function newFolderFunc() {
         e.preventDefault();
         const loginData = new FormData(newFolderForm).entries();
         const bearer = `Bearer ${localStorage.getItem("token")}`
-        let res = await fetch("http://localhost:3000/api/folders/create",{
+        let res = await fetch("https://patient-smoke-3266.fly.dev/api/folders/create",{
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -80,7 +80,7 @@ async function editFolder(id) {
         e.preventDefault();
         const folderData = new FormData(editFolderForm).entries();
         const bearer = `Bearer ${localStorage.getItem("token")}`
-        let res = await fetch(`http://localhost:3000/api/folders/${id}/edit`,{
+        let res = await fetch(`https://patient-smoke-3266.fly.dev/api/folders/${id}/edit`,{
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -100,7 +100,7 @@ async function editFolder(id) {
 }
 
 async function study(folder_id, name) {
-    let res = await fetch(`http://localhost:3000/api/folders/${folder_id}/cards/`,{
+    let res = await fetch(`https://patient-smoke-3266.fly.dev/api/folders/${folder_id}/cards/`,{
         method: "GET",
         headers: {"Content-Type": "application/json" },
     });
@@ -147,7 +147,7 @@ async function study(folder_id, name) {
 // deletes a specific card
 async function deleteCard(card_id, folder_id, name) {
     const bearer = `Bearer ${localStorage.getItem("token")}`;
-    let res = await fetch(`http://localhost:3000/api/folders/${folder_id}/cards/${card_id}/delete`,{
+    let res = await fetch(`https://patient-smoke-3266.fly.dev/api/folders/${folder_id}/cards/${card_id}/delete`,{
         method: "DELETE",
         headers: {
             "Content-Type": "application/json",
@@ -182,7 +182,7 @@ function newCardFunc(id, name) {
         e.preventDefault();
         const cardData = new FormData(newCardForm).entries();
         const bearer = `Bearer ${localStorage.getItem("token")}`
-        let res = await fetch(`http://localhost:3000/api/folders/${id}/cards/`,{
+        let res = await fetch(`https://patient-smoke-3266.fly.dev/api/folders/${id}/cards/`,{
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -222,7 +222,7 @@ async function editCard(card_id, folder_id, name) {
         e.preventDefault();
         const cardData = new FormData(editCardForm).entries();
         const bearer = `Bearer ${localStorage.getItem("token")}`
-        let res = await fetch(`http://localhost:3000/api/folders/${folder_id}/cards/${card_id}/edit`,{
+        let res = await fetch(`https://patient-smoke-3266.fly.dev/api/folders/${folder_id}/cards/${card_id}/edit`,{
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -248,7 +248,7 @@ async function editCards(id, name) {
             <a href="javascript:study('${id}', '${name}')">study</a>
         </div>`;
 
-    let res = await fetch(`http://localhost:3000/api/folders/${id}/cards/`,{
+    let res = await fetch(`https://patient-smoke-3266.fly.dev/api/folders/${id}/cards/`,{
         method: "GET",
         headers: {"Content-Type": "application/json" },
     });
@@ -283,7 +283,7 @@ async function myCards() {
             <h3>${localStorage.getItem("username")}'s cards</h3>
         </div>`;
 
-    let res = await fetch(`http://localhost:3000/api/users/${localStorage.getItem("id")}`,{
+    let res = await fetch(`https://patient-smoke-3266.fly.dev/api/users/${localStorage.getItem("id")}`,{
         method: "GET",
         headers: {"Content-Type": "application/json" },
     });
@@ -317,7 +317,7 @@ async function myCards() {
 // deletes folder with specific id
 async function deleteSet(id) {
     const bearer = `Bearer ${localStorage.getItem("token")}`;
-    let res = await fetch(`http://localhost:3000/api/folders/${id}/delete`,{
+    let res = await fetch(`https://patient-smoke-3266.fly.dev/api/folders/${id}/delete`,{
         method: "DELETE",
         headers: {
             "Content-Type": "application/json",
@@ -361,7 +361,7 @@ async function userFunc(id, name) {
             <h3>${name}'s cards</h3>
         </div>`;
 
-    let res = await fetch(`http://localhost:3000/api/users/${id}`,{
+    let res = await fetch(`https://patient-smoke-3266.fly.dev/api/users/${id}`,{
         method: "GET",
         headers: {"Content-Type": "application/json" },
     });
@@ -383,7 +383,7 @@ async function userFunc(id, name) {
 // gets all users
 async function users() {
     main.innerHTML = ""
-    let res = await fetch("http://localhost:3000/api/users/",{
+    let res = await fetch("https://patient-smoke-3266.fly.dev/api/users/",{
         method: "GET",
         headers: {"Content-Type": "application/json" },
     });
@@ -404,7 +404,7 @@ async function users() {
 // gets all folders
 async function folders() {
     main.innerHTML = ""
-    let res = await fetch("http://localhost:3000/api/folders/",{
+    let res = await fetch("https://patient-smoke-3266.fly.dev/api/folders/",{
         method: "GET",
         headers: {"Content-Type": "application/json" },
     });
@@ -445,7 +445,7 @@ function login() {
     registerForm.addEventListener("submit", async function (e){
         e.preventDefault();
         const loginData = new FormData(registerForm).entries();
-        let res = await fetch("http://localhost:3000/api/users/login",{
+        let res = await fetch("https://patient-smoke-3266.fly.dev/api/users/login",{
             method: "POST",
             headers: {"Content-Type": "application/json" },
             body: JSON.stringify(Object.fromEntries(loginData))
@@ -486,7 +486,7 @@ function register() {
     registerForm.addEventListener("submit", async function (e){
         e.preventDefault();
         const loginData = new FormData(registerForm).entries();
-        let res = await fetch("http://localhost:3000/api/users/signup",{
+        let res = await fetch("https://patient-smoke-3266.fly.dev/api/users/signup",{
             method: "POST",
             headers: {"Content-Type": "application/json" },
             body: JSON.stringify(Object.fromEntries(loginData))
